@@ -1,0 +1,44 @@
+Tools Required:
+    - docker
+    - pandas 
+    - oauth (automated get user playlist)
+
+
+Spotify Reference
+
+
+Design Flow
+1. create app to access app credentials
+    - required for access token
+    - required for API authorization
+2. Tutorials:
+    - https://developer.spotify.com/documentation/web-api/tutorials/getting-started
+    - https://developer.spotify.com/documentation/web-api/howtos/web-app-profile
+
+
+Access Tokens
+    - to use access token, must have Authorization header parameter
+    - access token valid for 1 hour, must get new one after
+
+API Calls
+    - restful API with different endpoints that return JSON metadata from Spotify Data Catalogue
+    - base address: https://api.spotify.com
+    - all API requests require authorization
+    - access data via HTTP requests in UTF-8 format to API endpoint
+    - API returns JSON in response body (or HTTP status code)
+
+Apps
+    - app provides Client ID and Client Secret needed for authorization
+
+Authorization
+    - implements OAuth 2.0 authorization framework
+        - https://datatracker.ietf.org/doc/html/rfc6749
+    - access to protected resouces is determined by scopes
+        - scopes enable app to access functionality
+    - scopes set during authorization determines access permissions
+    - authorization process requires client credentials (ID and secret)
+    - server issues access token, used to make API calls
+
+Playlists
+    - find a playlist using its Spotify ID
+    - can retrun information on any local files
