@@ -2,10 +2,8 @@ Tools Required:
     - docker
     - pandas 
     - oauth (automated get user playlist)
-
-
-Spotify Reference
-
+    - javascript
+    - node.js
 
 Design Flow
 1. create app to access app credentials
@@ -38,7 +36,46 @@ Authorization
     - scopes set during authorization determines access permissions
     - authorization process requires client credentials (ID and secret)
     - server issues access token, used to make API calls
-
 Playlists
     - find a playlist using its Spotify ID
     - can retrun information on any local files
+    - every change to playlist is saved in version history
+    - playlist has associated set of images which can be retrieved
+
+Quota Modes
+    - mode in which an app can be made: development mode or extended quota mode
+
+Rate Limit
+    - number of calls that app makes to Spotify in a rolling 30s window
+    - if app exceeds rate limit, will see 429 error responses
+
+Scopes
+    - only info users choose to share will be shared
+
+-----------------------------------------------------------------------------------------------
+
+Authorization Code Flow
+    - suitable for long-running applications where user grants permission once
+
+pre-req: create app
+source code: https://github.com/spotify/web-api-examples/tree/master/authentication/authorization_code
+
+1. Request Use Authorization
+    - app must buid and send GET request to /authorize endpoint w/ parameters
+
+2. Respose
+    - if request accepted, user is redirected back to app using redirect_uri
+
+3. Request Access Token
+    - if request accepted, app can exchange authorization code for access token
+    - make POST request to /api/token endpoin
+
+4. Response
+    - on success, return 200 OK status and JSON data
+
+5. Request Refressed Access Token
+    - tokens expire
+    - new tokens granted by supplying refresh token
+    
+
+    
