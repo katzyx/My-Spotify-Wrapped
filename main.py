@@ -6,47 +6,36 @@ import os
 import base64
 from requests import post
 import json
+from flask import Flask, redirect, request
+import urllib.parse
 
-# --- CLIENT CREDITAILS --- #
 load_dotenv()
 
 client_id = os.getenv("CLIENT_ID")
 client_secret = os.getenv("CLIENT_SECRET")
 
-def get_token():
-    ''' get authorization token'''
+app = Flask(__name__)
+redirect_uri = 'http://localhost:8888/callback'
 
-    # create auth string, encode with base64
-    auth_string = client_id + ":" + client_secret
-    auth_bytes = auth_string.encode("utf-8")
+# define /login route  
+@app.route('/login')
+def login():
+    '''build authorization url and send GET request to /authorize'''
 
-    # convert base64 object to string to pass with header
-    auth_base64 = str(base64.b64encode(auth_bytes), "utf-8")
+    print("Redirect to Spotify Login Page")
+    scope = "playlist-read-private playlist-read-collaborative user-top-read user-read-recently-played user-library-read playlist-read-collaborative"
 
-    # url to send request to /api/token endpoint of spotify oauth
-    url = "https://accounts.spotify.com/api/token"
-    headers = {
-        "Authorization": "Basic " + auth_base64,
-        "Content-Type": "application/x-www-form-urlencoded"
-    }
-    data = {"grant_type": "client_credentials"}
+    # create query parameters
+    q_params = {'response_type': 'code',
+        'client_id': client_id,
+        'scope': scope,
+        'redirect_uri': redirect_uri}
+    
+    auth_url = 'https://accounts.spotify.com/authorize?' + urllib.parse.urlencode(q_params)
+    
+    return redirect(auth_url)
 
-    # send auth request, returns json data in .content field
-    result = post(url, headers=headers, data=data)
-
-    # convert json data (string) to python dictionary to access the data
-    json_result = json.loads(result.content)
-    token = json_result["access_token"]
-
-    return token
-
-def get_auth_header(token):
-    '''construct header when sending request'''
-    return {"Authorization": "Bearer " + token}
-
-# --- END CLIENT CREDENTIALS --- #
+if __name__ == "__main__":
+    app.run(host="localhost", port=5000)
 
 
-
-
-token = get_token()
