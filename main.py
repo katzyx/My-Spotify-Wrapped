@@ -11,11 +11,12 @@ import urllib.parse
 
 load_dotenv()
 
-client_id = os.getenv("CLIENT_ID")
-client_secret = os.getenv("CLIENT_SECRET")
+CLIENT_ID = os.getenv("CLIENT_ID")
+CLIENT_SECRET = os.getenv("CLIENT_SECRET")
+ACCESS_TOKEN = "https://accounts.spotify.com/authorize?response_type=code&client_id=84b6f9b3a8b345ac9497f330d9f3a52f&scope=playlist-modify-private&redirect_uri=https://www.google.ca/"
 
 app = Flask(__name__)
-redirect_uri = 'http://localhost:8888/callback'
+redirect_uri = 'https://www.google.ca/'
 
 # define /login route  
 @app.route('/login')
@@ -27,7 +28,7 @@ def login():
 
     # create query parameters
     q_params = {'response_type': 'code',
-        'client_id': client_id,
+        'client_id': CLIENT_ID,
         'scope': scope,
         'redirect_uri': redirect_uri}
     
@@ -35,7 +36,21 @@ def login():
     
     return redirect(auth_url)
 
+
+def get_genre(id):
+    '''get the genres that are associated with an artist'''
+    track_url = "https://api.spotify.com/v1/tracks/" + id
+    headers = {"Authorization": f"Bearer " + ACCESS_TOKEN}
+    response = requests.get(track_url, headers)
+    
+    print(track_url)
+    print(headers)
+    print(response)
+    return
+
+
 if __name__ == "__main__":
-    app.run(host="localhost", port=5000)
+    # app.run(host="localhost", port=5000)
+    get_genre("2ccc2493302d46e8")
 
 
